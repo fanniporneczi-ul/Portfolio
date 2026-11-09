@@ -1,0 +1,477 @@
+/* ==========================================================================
+   GLOBAL STYLES AND THEME SETUP
+   ========================================================================== */
+
+/* Load custom handwritten chalk font */
+@font-face {
+  font-family: 'Crayon';
+  src: url('./assets/fonts/DKCoolCrayon.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Reset default margins and padding across all elements */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body setup: chalkboard background texture, default chalk font, and chalk cursor */
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('./assets/chalkboard.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  color: #f4f4f0; 
+  font-family: 'Crayon', sans-serif;
+  overflow: hidden; 
+
+  /* Custom chalk cursor */
+  cursor: url('./assets/chalk.png') 15 10, auto;
+}
+
+/* Main layout with wooden frame border and inner shadow */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden; 
+
+  /* Wooden frame around the board */
+  border: 1rem solid; 
+  border-image: url('./assets/wood2.jpg') 45 stretch; 
+  box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.9);
+}
+
+/* ==========================================================================
+   MAIN MENU (HEADER, STAGE AND NAVIGATION)
+   ========================================================================== */
+
+/* Header section displaying portfolio title */
+.app-header {
+  position: absolute;
+  top: 3rem; 
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+}
+
+.app-header h1 {
+  font-size: 4rem; 
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Central stage holding the profile picture */
+.chalkboard-container {
+  position: relative;
+  flex: 1; 
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-stage {
+  z-index: 2;
+}
+
+.profile-pic {
+  height: 50vh; 
+  max-height: 600px; 
+  width: auto; 
+}
+
+/* General styling for clickable section titles */
+.chalk-button {
+  position: absolute;
+  color: #f4f4f0;
+  font-size: 2.5rem;
+  z-index: 2;
+}
+
+/* Animated chalk circle that pops up on hover/click */
+.chalk-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%; 
+  height: 160%; 
+  
+  background-image: url('./assets/chalkCircle.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Initial state: small and transparent */
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  pointer-events: none; 
+  
+  /* Pop effect */
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+/* Hover and active state to display the chalk circle */
+.chalk-button:hover::before,
+.chalk-button:active::before {
+  transform: translate(-50%, -50%) scale(1) rotate(-3deg);
+  opacity: 1;
+}
+
+/* Positioning of the four section titles around the profile picture */
+.top-left     { top: 22%; left: 15%;  transform: rotate(-3deg); }
+.top-right    { top: 28%; right: 12%; transform: rotate(4deg);  }
+.bottom-left  { bottom: 25%; left: 10%; transform: rotate(2deg); }
+.bottom-right { bottom: 18%; right: 18%; transform: rotate(-4deg); }
+
+/* Common styling for chalk arrows pointing */
+.arrow::after {
+  content: '';
+  position: absolute;
+  width: 3.2em;  
+  height: 3.2em; 
+  background-image: url('./assets/chalkArrow.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.8; 
+  pointer-events: none; 
+}
+
+/* Individual arrow rotations and positions */
+.top-left::after {
+  top: 0%; 
+  left: 105%;  
+  transform: rotate(-135deg); 
+}
+
+.top-right::after {
+  top: -30%;
+  right: 130%; 
+  transform: scaleX(-1) rotate(-155deg); 
+}
+
+.bottom-left::after {
+  bottom: -20%; 
+  left: 110%;  
+  transform: scaleY(-1) rotate(-145deg); 
+}
+
+.bottom-right::after {
+  bottom: -30%;
+  right: 100%; 
+  transform: scale(-1, -1) rotate(-135deg); 
+}
+
+/* Footer */
+.app-footer {
+  position: absolute;
+  bottom: 1.5rem; 
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  color: white;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   SECTION OVERLAY, SLIDING ANIMATIONS, SECTION SWITCHER
+   ========================================================================== */
+
+/* Keyframe animations mimicing sliding blackboards */
+@keyframes slideInFromBottom {
+  0%   { transform: translateY(100vh); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes slideOutToBottom {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes slideInFromRight {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes slideOutToRight {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(100vw); }
+}
+
+/* Fullscreen overlay container that holds the sliding section board */
+.sectionswitcher-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; 
+  overflow: hidden;
+}
+
+/* Popup board content with matching wooden frame and entrance animation */
+.sectionswitcher-content {
+  background-image: url('./assets/chalkboard.jpg'); 
+  background-size: cover;
+  background-position: center;
+  
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  border-radius: 0;
+  margin: 0;
+  
+  border: 1rem solid; 
+  border-image: url('./assets/wood2.jpg') 45 stretch; 
+  box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.9);
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 3rem;
+  
+  /* Entrance animation from bottom */
+  animation: slideInFromBottom 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Exit animation applied when user closes the section */
+.sectionswitcher-content.slide-out {
+  animation: slideOutToBottom 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.sectionswitcher-content h2 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Close button placed at the bottom of the board */
+.close-button {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* ==========================================================================
+   SECTION SPECIFIC STYLES
+   ========================================================================== */
+
+/* Shared chalkboard text and heading styles */
+.chalk-text {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.chalk-header {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.chalk-subheader {
+  font-size: 2rem;
+  text-align: left;
+}
+
+/* Projects Section: Responsive two-column grid */
+.projects-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+  align-items: center;
+  width: 100%;
+}
+
+.project-image-column {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-img {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border: 3px solid #f4f4f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  object-fit: cover;
+}
+
+.project-info-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+/* Experience Section: Custom bulleted list */
+.chalk-list {
+  list-style: none;
+  padding-left: 2rem;
+  margin: 0;
+}
+
+.chalk-list li {
+  position: relative;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+/* Custom chalk bullet point */
+.chalk-list li::before {
+  content: '•';
+  position: absolute;
+  left: -1.5rem;
+  top: -0.1rem;
+  font-size: 1.3rem;
+}
+
+/* Contact Section: Interactive link styling */
+.chalk-link {
+  color: #f4f4f0;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  outline: none;
+}
+
+.chalk-link:hover,
+.chalk-link:active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  text-decoration-color: #f4f4f0;
+  color: #f4f4f0;
+}
+
+/* ==========================================================================
+   RESPONSIVENESS
+   ========================================================================== */
+
+/* Tablet (Screen widths up to 1024px) */
+@media (max-width: 1024px) {
+  body, .app-container { overflow-x: hidden; }
+  .app-container { height: 100dvh; }
+
+  .app-header h1 {
+    font-size: 4.2rem; 
+    padding: 0 2rem;
+    margin-top: 2.5rem;
+  }
+
+  .profile-pic {
+    height: 40vh; 
+  }
+
+  .chalk-button {
+    font-size: 2rem; 
+  }
+  
+  /* Adjusted positions of arrows */
+  .top-left     { top: 24%; left: 10%;  transform: rotate(-2deg); }
+  .top-right    { top: 26%; right: 10%; transform: rotate(2deg);  }
+  .bottom-left  { bottom: 26%; left: 8%;  transform: rotate(1deg); }
+  .bottom-right { bottom: 22%; right: 12%; transform: rotate(-2deg); }
+}
+
+/* Mobile Phone (Screen widths up to 600px) */
+@media (max-width: 600px) { 
+  /* Thinner wooden border on smaller screens */
+  .app-container {
+    border: 0.5rem solid; 
+    border-image: url('./assets/wood2.jpg') 45 stretch; 
+    box-shadow: inset 0 0 1rem rgba(0, 0, 0, 0.9);
+  }
+
+  .app-header h1 {
+    font-size: 2.2rem; 
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .profile-pic {
+    height: 30vh; 
+  }
+
+  .chalk-button {
+    font-size: 1.5rem; 
+  }
+  
+  /* Compact section title positioning */
+  .top-left     { top: 26%; left: 8%;  transform: rotate(-2deg); }
+  .top-right    { top: 29%; right: 8%; transform: rotate(2deg);  }
+  .bottom-left  { bottom: 27%; left: 8%; transform: rotate(1deg); }
+  .bottom-right { bottom: 23%; right: 10%; transform: rotate(-2deg); }
+
+  /* Re-orient arrows */
+  .top-left::after     { top: 100%; left: 20%; transform: scaleX(-1) rotate(-65deg); }
+  .top-right::after    { top: 90%; right: 30%; transform: rotate(-45deg); }
+  .bottom-left::after  { bottom: 90%; left: 10%; transform: rotate(125deg); }
+  .bottom-right::after { bottom: 90%; right: 10%; transform: scaleX(-1) rotate(125deg); } 
+
+  /* Switch to horizontal slide transitions on mobile devices */
+  .sectionswitcher-content {
+    animation: slideInFromRight 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .sectionswitcher-content.slide-out {
+    animation: slideOutToRight 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .chalk-text {
+    font-size: 1rem;
+  }
+
+  .app-footer {
+    font-size: 0.9rem;
+    bottom: 1rem;
+    padding: 0 1rem;
+  }
+
+  /* Stack projects into a single column */
+  .project-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-img {
+    max-width: 260px;
+  }
+
+  .chalk-list {
+    padding-left: 2rem;
+  }
+
+  .chalk-subheader {
+    font-size: 1.5rem;
+  }
+}
