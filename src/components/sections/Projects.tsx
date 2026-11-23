@@ -10,7 +10,7 @@ import hardwareProgrammingImg2 from '../../assets/HardwareProgramming.png';
 import hardwareProgrammingImg3 from '../../assets/code.png';
 import spatialDesignImg1 from '../../assets/3d_1.png';
 import spatialDesignImg2 from '../../assets/3d_2.png';
-import wearableDesignImg1 from '../../assets/DSC_0014.jpg';
+const wearableDesignImg1 = new URL('../../assets/DSC_0014.JPG', import.meta.url).href;
 import wearableDesignImg2 from '../../assets/bag_rembg.png';
 import wearableDesignImg3 from '../../assets/bag_inside.jpg';
 import physicalPrototypingImg1 from '../../assets/flower_1.jpg';
@@ -28,8 +28,8 @@ import headshotThumb from '../../assets/Headshot_thumbnail_edited.jpg';
 import headshotFull from '../../assets/Headshot_full_edited.jpg';
 import passionThumb from '../../assets/Passion_shot_thumbnail_edited.jpg';
 import passionFull from '../../assets/Passion_shot_full_edited.jpg';
-import aestheticThumb from '../../assets/Aesthetic_shot_thumbnail_edited.jpg';
-import aestheticFull from '../../assets/Aesthetic_shot_full_edited.jpg';
+const aestheticThumb = new URL('../../assets/Aesthetic_shot_thumbnail_edited.JPG', import.meta.url).href;
+const aestheticFull = new URL('../../assets/Aesthetic_shot_full_edited.JPG', import.meta.url).href;
 
 interface Project {
   id: string;
