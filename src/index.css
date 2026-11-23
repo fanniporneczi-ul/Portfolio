@@ -1,8 +1,38 @@
+/* === Global type and color defaults === */
 :root {
-  line-height: 1.5;
-  
+  color: #1e1818;
+  background: #f3eae0;
+  font-family: 'Inter', sans-serif;
   font-synthesis: none;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Box model reset === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Root sizing and page-height baseline === */
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* === Inherit typography for interactive controls === */
+button,
+a {
+  font: inherit;
 }

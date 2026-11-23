@@ -1,3 +1,4 @@
+/** Mounts the portfolio application into the HTML document's root element. */
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';

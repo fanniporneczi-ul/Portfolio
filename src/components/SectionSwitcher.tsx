@@ -1,61 +1,58 @@
-import { useState } from 'react';
+/** Defines the page navigation and renders the selected non-Home section. */
+import type { ComponentType } from 'react';
 import Introduction from './sections/Introduction';
 import Projects from './sections/Projects';
 import Experience from './sections/Experience';
 import Contact from './sections/Contact';
 
-// Defines what information SectionSwitcher needs to open and close sections.
-interface SectionSwitcherData {
-  activeSection: string;
-  onClose: () => void;
-}
+export type PageName = 'home' | 'introduction' | 'projects' | 'experience' | 'contact';
+type SectionName = Exclude<PageName, 'home'>;
 
-// Map strings to the components with a dictionary
-const ContentMap: Record<string, React.ElementType> = {
-  'Introduction': Introduction,
-  'Projects': Projects,
-  'Experience': Experience,
-  'Contact': Contact
+// Keep the navigation labels and page ids together so they stay in sync.
+const pageLinks: { id: PageName; label: string }[] = [
+  { id: 'home', label: 'Home' },
+  { id: 'introduction', label: 'Introduction' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'contact', label: 'Contact' },
+];
+
+// Home is rendered by App; this map contains only full-page subviews.
+const pageComponents: Record<SectionName, ComponentType> = {
+  introduction: Introduction,
+  projects: Projects,
+  experience: Experience,
+  contact: Contact,
 };
 
-/* Displays the sliding chalkboard popup for the currently selected section 
- * and handles closing it when the user clicks the close button.
- */
-function SectionSwitcher({ activeSection, onClose }: SectionSwitcherData) {
-  // Handle switching back to main menu
-  const [isClosing, setIsClosing] = useState(false);
-  // Get current active section from ContentMap
-  const ActiveComponent = ContentMap[activeSection];
+interface SectionNavigationProps {
+  activePage: PageName;
+  onPageChange: (page: PageName) => void;
+}
 
-  // Start closing section, go back to main menu
-  const handleClose = () => {
-    setIsClosing(true);
-  };
-
-  // Destroy section after closing animation ends
-  const handleAnimationEnd = () => {
-    if (isClosing) {
-      onClose();
-    }
-  };
-
+export function SectionNavigation({ activePage, onPageChange }: SectionNavigationProps) {
   return (
-    <div className="sectionswitcher-overlay">
-      {/* Add slide-out property to className only if isClosing is true */}
-      <div className={`sectionswitcher-content ${isClosing ? 'slide-out' : ''}`}
-        onAnimationEnd={handleAnimationEnd}>
-        <h2 className="chalk-header">{activeSection}</h2>
-        
-        {/* Load content for current active section if there is a script for it */}
-        <div className="sectionswitcher-body">
-          {ActiveComponent ? <ActiveComponent /> : <p>Work in progress...</p>}
-        </div>
-
-        {/* Close current active section when close button is clicked */}
-        <div className="chalk-button close-button" onClick={handleClose}>Close</div>
-      </div>
-    </div>
+    <nav aria-label="Portfolio pages" className="site-nav site-nav--right">
+      {/* Buttons update App's active page and expose the current page accessibly. */}
+      {pageLinks.map(({ id, label }) => (
+        <button
+          aria-current={activePage === id ? 'page' : undefined}
+          className={`nav-pill${activePage === id ? ' is-active' : ''}`}
+          key={id}
+          onClick={() => onPageChange(id)}
+          type="button"
+        >
+          {label}
+        </button>
+      ))}
+    </nav>
   );
+}
+
+function SectionSwitcher({ activePage }: { activePage: SectionName }) {
+  // Resolve the typed page id to one component instead of stacking sections.
+  const ActivePage = pageComponents[activePage];
+  return <ActivePage />;
 }
 
 export default SectionSwitcher;
